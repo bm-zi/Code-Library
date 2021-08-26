@@ -1,0 +1,106 @@
+from django.db import models
+from codelibrary.models import Category, CodeLibrary, Language, Source
+
+
+Category.objects.all()
+
+
+# List code titles that are having certain categories
+categories_list=['basic python', 'os operations']
+CodeLibrary.objects.filter(category__category__in=categories_list).all().distinct()
+
+
+Language.objects.get(language='python')
+<Language: python>
+
+
+
+>>> lst = list(CodeLibrary.objects.all())
+>>> for el in lst: print(el)
+... 
+get all the paragraphs from a url using modules gethtml and articletext
+example of using modules gethtml and articletext
+scraping articles and titles from multiple htmls using threads, mechanize and readability
+improving performance using threading multiple requests for yahoo finance to print the last price for each company listed in a csv file
+clear terminal screen
+save stock price in csv in the interval of 30 minutes for a list of symbols
+threading to improve performance and requesting last price for symbols from Yahoo finance
+generates a list of all links inside of a website stack and queue concepts
+websites spidering with depth zero
+Extracting links from html using mechanize module to avoid infinit loop
+... truncated
+
+
+>>> Language.objects.all()
+<QuerySet [<Language: bash>, <Language: nodejs>, <Language: python>, <Language: javascript>, <Language: django>, <Language: bootstrap>]>
+>>> Language.objects.get(language='bash')
+<Language: bash>
+
+# accessing id attribute of a row
+>>> Language.objects.get(language='bash').id
+5
+
+# update a column/attribute of a code, returns number of records updated
+>>> CodeLibrary.objects.filter(title='clear terminal screen').update(is_favorite=True)
+1
+>>> CodeLibrary.objects.filter(title='clear terminal screen').update(is_favorite=False)
+1
+
+# user.groups.all().delete() will delete the related group objects, 
+# while user.groups.clear() will only disassociate the relation
+
+# 1- return a queryset or a group of rows:
+>>> CodeLibrary.objects.filter(title='clear terminal screen')
+<QuerySet [<CodeLibrary: clear terminal screen>]>
+
+# 2- first() returns a single row in queryset:
+>>> CodeLibrary.objects.filter(title='clear terminal screen').first()
+<CodeLibrary: clear terminal screen>
+
+# 3. get an attribute of the row by '.' operator:
+>>> CodeLibrary.objects.filter(title='clear terminal screen').first().id
+114
+
+
+
+# search database
+>>> CodeLibrary.objects.filter(title__icontains='terminal')
+<QuerySet [<CodeLibrary: framing multi-line string as script input and display it in terminal>, 
+<CodeLibrary: emulate running commmands from script file in terminal>, 
+<CodeLibrary: clear terminal screen>]>
+
+>>> lst = list(CodeLibrary.objects.filter(title__icontains='terminal'))
+>>> for el in lst: print(el)
+... 
+framing multi-line string as script input and display it in terminal
+emulate running commmands from script file in terminal
+clear terminal screen
+
+
+# Using Q in search query:
+>>> from django.db.models import Q
+>>> qst = CodeLibrary.objects.filter(Q(title__icontains='terminal')|Q(source__source__icontains='terminal'))
+>>> qst
+<QuerySet [<CodeLibrary: framing multi-line string as script input and display it in terminal>, 
+<CodeLibrary: emulate running commmands from script file in terminal>, 
+<CodeLibrary: clear terminal screen>]>
+>>> list(qst)
+[<CodeLibrary: framing multi-line string as script input and display it in terminal>, 
+<CodeLibrary: emulate running commmands from script file in terminal>, 
+<CodeLibrary: clear terminal screen>]
+>>> for el in list(qst): print(el)
+... 
+framing multi-line string as script input and display it in terminal
+emulate running commmands from script file in terminal
+clear terminal screen
+>>>
+
+# Another example
+>>> CodeLibrary.objects.filter(title__icontains='terminal').first()
+<CodeLibrary: emulate running commmands from script file in terminal>
+>>> CodeLibrary.objects.filter(title__icontains='terminal').first().is_favorite
+True
+>>> 
+
+# See all about a table:
+>>> help(CodeLibrary)

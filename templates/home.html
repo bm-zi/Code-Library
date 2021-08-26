@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% block head_title %}Home{% endblock head_title %}
+{% block page_title %} {{ alltitles }} {% endblock page_title %}
+{% load static %}
+
+{% block top_panel %}
+
+
+<form class="form mt-2" name="form-search-code"
+        method="get"
+        action="{% url 'codelibrary:search_codes_view' %}">
+
+    <div class="row">
+        <div class="col">
+            <input name="q" class="form-control" type="search" 
+                    placeholder="Search in codes content or title..."
+                    aria-label="Search" id="search-str" />
+            
+            <input name="days" class="form-control" type="search" 
+                    placeholder="Find codes from n-day ago ..."
+                    aria-label="Search" id="days-str"/>
+            
+            <select name="select-language" class="custom-dropdown-menu mr-2 pt-2" 
+                    id="select-language" style="width:100%;max-width:100%;">
+                <option value="">Programming Language</option>
+                {% for l in languages %}
+                    <option value="{{l}}">{{l}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col">
+            <select class="select" id="" name="select-category" 
+                    style="width:100%;max-width:100%;" multiple>
+                {% for c in categories %}
+                    <option value="{{c}}">{{c}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <button class="btn btn-outline-dark btn-lg btn-block bg-secondary mt-1">
+        search
+    </button>
+</form>
+
+<label>
+    <span id="options-number">
+        {{countopts}}
+    </span>
+</label>
+
+<!-- minimize and maximize buttons -->
+<div>
+    <!-- <button class='btn btn-sm btn-outline-dark pull-right float-right mt-0 bg-light' 
+            onclick='selectMaxHandler("{{total_no}}")'>
+            ++
+    </button> -->
+    <button class='btn btn-sm btn-outline-dark pull-right float-right mt-0 bg-light' 
+            onclick="selectMinHandler()">
+            +
+    </button>
+    <button class='btn btn-sm btn-outline-dark pull-right float-right mt-0 bg-light' 
+            onclick="oneRowHandler()">
+            -
+    </button>
+</div>
+
+<select id="select-title" class="bg-light" style="width: 100%;" 
+        size="{{favorites_no}}" onchange="codeDisplayHandler()">
+    
+    {% for t in titles %}
+        <option value="{{t}}">{{t}}</option>
+    {% endfor %}
+
+</select>{% csrf_token %}<br>
+
+
+<div id="textarea-codeinfo" class="mb-2">
+    <table id="info-table" 
+        class="table table-sm table-dark table-bordered"
+        style="border: 3px solid"
+        >
+        <tbody>
+          <tr>
+            <td></td><td></td>
+          </tr>
+          <tr>
+            <td></td><td></td>
+          </tr>
+        </tbody>
+      </table>
+</div>
+
+
+
+<select id="select-operation" class="custom-dropdown-menu bg-secondary p-2" 
+        style="width:100%;max-width:100%;">
+
+    <option selected>select an action</option>
+    <option value="show all codes">show all codes</option>
+    <option id="save-code" value="save">save</option>
+    <option id="fav-code" value="favorite/unfavorite change">favorite/unfavorite change</option>
+    <option id="modify-code" value="modify code">modify code</option>
+    <option value="add new code">add new code</option>
+    <option id="delete-code" value="delete code">delete code</option>
+    <option id="download-code" value="download content">download content</option>
+
+</select>{% csrf_token %}
+
+
+<script type="text/javascript">
+
+document.getElementById("select-operation").onfocus = function() {
+    var titles =  document.getElementById('select-title');
+    if ( !titles.options[titles.selectedIndex] ) {
+            document.getElementById("save-code").disabled = true;
+            document.getElementById("modify-code").disabled = true;
+            document.getElementById("delete-code").disabled = true;
+            document.getElementById("download-code").disabled = true;
+            document.getElementById("fav-code").disabled = true;
+    }
+    else {
+            document.getElementById("save-code").disabled = false;
+            document.getElementById("modify-code").disabled = false;
+            document.getElementById("delete-code").disabled = false;
+            document.getElementById("download-code").disabled = false;
+            document.getElementById("fav-code").disabled = false;
+    }
+}
+
+
+document.getElementById("select-operation").onchange = function() {
+
+    var select_operation = document.getElementById('select-operation');
+    var operation_str = select_operation.options[select_operation.selectedIndex].text;
+    
+    if (operation_str === 'show all codes') {
+         window.location.href = "{% url 'codelibrary:all_view' %}"
+    }
+
+    if (operation_str === 'save') {
+        saveSourceHandler()
+    }
+
+    if (operation_str === 'modify code') {
+        modifyHandler()
+    }
+
+    if (operation_str === 'favorite/unfavorite change') {
+        favoriteHandler()
+    }
+
+    if (operation_str === 'delete code') {
+        deleteHandler()
+    }
+
+    if (operation_str === 'add new code') {
+        window.location.href = "{% url 'codelibrary:add_new_code_view' %}"
+    }
+    if (operation_str === 'download content') {
+        downloadCodeHandler()
+    }
+}   
+</script>
+
+
+<button class='btn btn-sm btn-outline-dark pull-right float-right mt-4 bg-dark text-light border-white' 
+        onclick="textareaFullScreen()" id='btn-fullscreen'>
+        ->
+</button>
+<button class='btn btn-sm btn-outline-dark pull-right float-right mt-4 bg-dark text-light border-white' 
+        onclick="textareaMaxHandler()" id='btn-max'>
+        +
+</button>
+<button class='btn btn-sm btn-outline-dark pull-right float-right mt-4 bg-dark text-light border-white' 
+        onclick="textareaMinHandler()" id='btn-min'>
+        -
+</button>
+
+
+<textarea id="textarea-source" class="form-control mt-2 text-light bg-dark" 
+            rows="10" style="margin-top: 15px; overflow: auto;"
+            placeholder="code content window" wrap="off">
+</textarea>
+
+{% endblock top_panel %}

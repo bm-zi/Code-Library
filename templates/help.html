@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% block head_title %}Help{% endblock head_title %}
+{% block page_title %}- Help{% endblock page_title %}
+{% load static %}
+
+{% block help_page %}
+<div class="bg-light mt-3 p-5">
+    
+    <h1 class="text-center text-primary font-weight-bold">
+        Help On Using Code Library
+    </h1>
+    
+    <p>
+        Code Library is a web-based django application, that stores 
+        codes written from differnt programming language. Data is 
+        maintained in postgres database.
+
+        <br><br>
+        Developers can store pieces of code in databse and create their
+        own library. Codes can be accessed from database and be 
+        manipulated in many different ways.
+        
+        <br><br>
+        The source code is free and is available to 
+        <a href="">download</a> 
+        for personal use.
+    </p>
+
+    
+    <br><br>
+    <div class="row">
+        <h3 class="text-primary font-weight-bold">GUI illustration</h3>
+        <img src="{% static 'images/gui-illustration.png' %}" 
+                class="w-100 float-right"
+            />
+    </div>
+
+    <br><br>
+
+    <div class="row">
+        <div class="col-md-4">
+        <p>
+            The first step is to create a record in databse for a pice of 
+            code from the action menu.<br><br>
+            
+            By default, a list of favorite codes is displayed in home page.
+            We can view all codes by choosing "show all code" from action
+            menu.<br><br>
+            
+            The code content window will show the content of selected code
+            from code list, while code information window at the most buttom 
+            of home page shows the detailed information about selected code. 
+            
+            </p>
+        </div>
+        <div class="col-md-8">
+            <img src="{% static 'images/create-code.png' %}" 
+                class="w-100 float-right"
+            />
+        </div>
+    </div>
+    
+    <br><br>
+    <h3 class="text-primary font-weight-bold"> Operations available for code items</h3>
+
+    <p>
+        The following operations can be done on items selected in code 
+        list window:
+        <ul>
+            <li><mark>Show all codes</mark><br>
+                All codes from all programming languages are displayed
+                in code list window 
+            </li>
+            <br>
+          <li><mark>save</mark><br>
+                As a code item is selected, the code content can be edited
+                within code content window and then click on save updates
+                the code content in database.
+            </li>
+            <br>
+            <li><mark>favorite/unfavorite change</mark><br>
+                We can flag a code as favaorite or remove a code from
+                favorite list by this option.               
+            </li>
+            <br>
+            <li><mark>modify code</mark><br>
+                We can select a code and modify all code parameters by 
+                selecting this option. A new dialog form will be opened
+                and then we can change the code parameters from there. 
+            </li>
+            <br>
+            <li><mark>add new code</mark><br>
+                By choosing this option, we let a new record be added
+                to database. Each new code will have its own specific
+                parameter.
+            </li>
+            <br>
+            <li><mark>delete code</mark><br>
+                A code item with all associated parameters will be 
+                removed from the database.
+            </li>
+            <br>
+            <li><mark>download content</mark><br>
+                Choosing this option will allow user to open or save
+                the content of any selected code item in a default system
+                editor, like gedit in Linux.
+            </li>
+        </ul>       
+    </p>
+
+    <br>
+    <h3 class="text-primary font-weight-bold">Parmeters associated with each code</h3>
+    <p>
+    Each code item in database is associated by following parameters,
+    that will be recoded in database when user creates a new code in 
+    database through the action menu, with option "add a new code".<br>
+    Here are the list of parameters:
+    <ul>
+        <li><mark>code title</mark></li><br>
+        <li><mark>programming language</mark></li><br>
+        <li><mark>created at </mark>(will be added automatically by database)</li><br>
+        <li><mark>is favorite</mark></li><br>
+        <li><mark>category</mark></li>
+    </ul>
+    </p>
+
+    <br>
+    <h3 class="text-primary font-weight-bold">Search options</h3>
+
+ 
+   
+    <p> We can filter the list of codes displayed by following search options:</p>
+
+    <img src="{% static 'images/search-options.png' %}"
+        class="w-100 float-right"
+    />
+
+    
+    <ul>
+        <li><mark>search</mark><br>
+            Any pattern can be used for this search. This search will
+            show all code items that have the search pattern in code 
+            title string, or in content of the code in the database.
+        </li>
+        <br>
+        <li><mark>search by code age</mark><br>
+            With this option we can find all codes from "n" days ago.
+            "n" must be an intger. For example: 7, 15, 30 etc. 
+        </li>
+        <br>
+        <li><mark>filter codes by programing languages</mark>?<br>
+            Codes in database are categorized by programming languages.
+            so for example we can find all codes for Java, Perl or any
+            other languages.
+        </li>
+        <br>
+        <li><mark>fliter codes by category</mark><br>
+            Code are also categorized in database based on their 
+            application or most common used environment, like in 
+            finance, networking, OS administration etc.
+        </li>
+    </ul>
+
+
+
+  
+
+
+    <br><br>
+    <h3 class="text-primary font-weight-bold">A view of all codes listed</h3><br>
+    
+    <div class="row">
+
+        <div class="col-md-12">
+            <p>
+                A view of all codes in database can be obtained from 
+                action menu choosing "show all code", and all windows 
+                can be collapsed and extended, to get a better readability.
+            </p>
+        
+        
+            <img src="{% static 'images/all-codes.png' %}"
+                        class="w-100 float-right"
+                    />
+        </div>
+        
+    </div>
+    
+    
+</div>    
+
+{% endblock help_page %}

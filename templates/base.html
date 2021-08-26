@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% load static %}
+    <title>Code Library {% block head_title %} {% endblock head_title %}</title>
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+    
+
+    <!-- BOOTSTAP -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="{% static 'handlers.js' %}"></script>
+    <script type="text/javascript">var number = 0;</script>
+
+    <style>
+        html {
+            font-size: 13px;
+        }
+        body {
+         font-family: Monospace;
+         font-weight: bold;
+         background-color:slategrey;
+        }
+        table, th, td, tr{
+            padding: 0px;
+            margin: 0px;
+            border-spacing:0px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card mt-2 bg-dark">
+            
+                    <h3 class="mt-3" style="text-align: center;">
+                        <a class="text-white font-weight-bold" 
+                        style="text-decoration: none;" 
+                        href="/">Code Library {% block page_title %}{% endblock page_title %}</a>
+                        
+                    </h3>
+                    <mark class="pl-2">
+                        Favorite Codes = <span style="color: red;">{{favorites_no}}</span>
+                        &nbsp;&nbsp;&nbsp;
+                        Total Codes = <span style="color: red;">{{total_no}}</span>
+                        <button class="float-right mr-2"><a href="/help/">Help</a></button>
+                        <button class="float-right mr-2"><a href="/admin/">Admin</a></button>
+                    </mark>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="row">
+            <div class="col">
+                {% block top_panel %}{% endblock top_panel %}
+            </div>
+        </div>
+
+                
+        <div class="row">
+            {% block lower_panel %}{% endblock lower_panel %}
+        </div>
+
+        
+        <div class="row">
+            <div class="col">
+                {% block buttom_panel %}{% endblock buttom_panel %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                {% block help_page %}{% endblock help_page %}
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
