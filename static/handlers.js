@@ -88,10 +88,14 @@ function codeDisplayHandler() {
     xhr.open(method, url)
     setHeader(xhr)
     xhr.onload = function() {
+        var div_code_content = document.getElementById("code-content")
+        div_code_content.hidden = false;
         var xhrResponseText = xhr.responseText;
         var jsonResponse = JSON.parse(xhrResponseText);
-        textarea_source = getElements()[2]
-        div_codeinfo = getElements()[3]
+        textarea_source = getElements()[2];
+        textarea_source.hidden = false;
+        div_codeinfo = getElements()[3];
+        div_codeinfo.hidden = false;
         textarea_source.innerHTML = jsonResponse.source;
         
         var str = jsonResponse.code_info
@@ -101,9 +105,16 @@ function codeDisplayHandler() {
         infoTable.rows[0].cells[0].innerHTML = arr[0];
         infoTable.rows[0].cells[1].innerHTML = arr[2].replace(/['"]+/g, '');
         infoTable.rows[1].cells[0].innerHTML = arr[1].replace(/['"]+/g, '');
-        infoTable.rows[1].cells[1].innerHTML = arr[3];
+        
+        if (arr[3] === 'True' ){
+            infoTable.rows[1].cells[1].innerHTML = 'is favorite'
+        }
+        else {
+            infoTable.rows[1].cells[1].innerHTML = 'not favorite'
+        }
         // Alternative solution, instead of populating html table:
         // div_codeinfo.innerHTML = arr;
+        
     }
     xhr.send(data)
     return
@@ -337,6 +348,8 @@ function countOptions(){
     var number=$("#select-title").children('option').length;
     $("#options-number").text(number)
 }
+
+
 
 /*
     if (elem != 'NaN' && elem != null && elem != '') {

@@ -5,7 +5,7 @@
 
 {% block top_panel %}
 
-
+<!-- Search form  -->
 <form class="form mt-2" name="form-search-code"
         method="get"
         action="{% url 'codelibrary:search_codes_view' %}">
@@ -22,7 +22,7 @@
             
             <select name="select-language" class="custom-dropdown-menu mr-2 pt-2" 
                     id="select-language" style="width:100%;max-width:100%;">
-                <option value="">Programming Language</option>
+                <option value="">Programming Language or Framework</option>
                 {% for l in languages %}
                     <option value="{{l}}">{{l}}</option>
                 {% endfor %}
@@ -43,13 +43,16 @@
     </button>
 </form>
 
+
+<!-- Display number of search result -->
 <label>
     <span id="options-number">
         {{countopts}}
     </span>
 </label>
 
-<!-- minimize and maximize buttons -->
+
+<!-- minimize and maximize buttons (labeled as "-" and "+") -->
 <div>
     <!-- <button class='btn btn-sm btn-outline-dark pull-right float-right mt-0 bg-light' 
             onclick='selectMaxHandler("{{total_no}}")'>
@@ -65,6 +68,8 @@
     </button>
 </div>
 
+
+<!-- Display a list of selectable code titles -->
 <select id="select-title" class="bg-light" style="width: 100%;" 
         size="{{favorites_no}}" onchange="codeDisplayHandler()">
     
@@ -75,7 +80,8 @@
 </select>{% csrf_token %}<br>
 
 
-<div id="textarea-codeinfo" class="mb-2">
+<!-- Display information details on selected code -->
+<div id="textarea-codeinfo" class="mb-2" hidden>
     <table id="info-table" 
         class="table table-sm table-dark table-bordered"
         style="border: 3px solid"
@@ -92,7 +98,7 @@
 </div>
 
 
-
+<!-- Drop-down action menu -->
 <select id="select-operation" class="custom-dropdown-menu bg-secondary p-2" 
         style="width:100%;max-width:100%;">
 
@@ -107,7 +113,7 @@
 
 </select>{% csrf_token %}
 
-
+<!-- associate action items to respective handlers -->
 <script type="text/javascript">
 
 document.getElementById("select-operation").onfocus = function() {
@@ -164,6 +170,9 @@ document.getElementById("select-operation").onchange = function() {
 </script>
 
 
+
+<!-- Display minimize and maximize buttons for code content window -->
+<div id="code-content" hidden>
 <button class='btn btn-sm btn-outline-dark pull-right float-right mt-4 bg-dark text-light border-white' 
         onclick="textareaFullScreen()" id='btn-fullscreen'>
         ->
@@ -178,9 +187,10 @@ document.getElementById("select-operation").onchange = function() {
 </button>
 
 
+<!-- Display a text window for the content of a selected code item  -->
 <textarea id="textarea-source" class="form-control mt-2 text-light bg-dark" 
             rows="10" style="margin-top: 15px; overflow: auto;"
             placeholder="code content window" wrap="off">
 </textarea>
-
+</div>
 {% endblock top_panel %}

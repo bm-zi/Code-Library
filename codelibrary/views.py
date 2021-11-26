@@ -73,7 +73,7 @@ def home_view(request):
         'languages': languages,
         'favorites_no': favorites_no,
         'total_no': total_no,
-        'alltitles' : '- Favorite Codes'
+        'alltitles' : '- Listing Favorite Codes'
     })
 
 
@@ -84,7 +84,7 @@ def all_view(request):
         Shows in home page a list of all codes.
     """
     data = queries()
-    data["alltitles"] = '- All Codes'
+    data["alltitles"] = '- Listing All Codes'
     return render(request, 'home.html', context=data)
 
 

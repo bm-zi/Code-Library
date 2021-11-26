@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import (
+from codelibrary.views import (
     home_view,
     all_view,
     title_source_view, 
