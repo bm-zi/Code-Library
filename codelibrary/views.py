@@ -511,7 +511,7 @@ def search_codes_view(request):
             countopts = 0
 
         data['titles'] = result
-        data['countopts'] = 'search result: ' + str(countopts)
+        data['countopts'] = 'Found: ' + str(countopts)
         return render(request, 'home.html', context=data)
 
     result = ['Search field is empty!',]

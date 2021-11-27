@@ -291,8 +291,13 @@ function textareaMinHandler(){
 
 
 function textareaFullScreen(){
-    document.querySelector('#textarea-source').style.width= "100vw";
-    document.querySelector('#textarea-source').style.height="100vh";
+    var x = document.getElementById("full-screen")
+    if (window.getComputedStyle(x).display === "none") {
+        document.getElementById("full-screen").hidden = false;    
+      }
+    else {
+        document.getElementById("full-screen").hidden = true;
+    }
 }
 
 

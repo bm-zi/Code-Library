@@ -5,6 +5,7 @@
 
 {% block top_panel %}
 <label id="top"></label>
+<div id="full-screen">
 <!-- Search form  -->
 <form class="form mt-2" name="form-search-code"
         method="get"
@@ -168,15 +169,13 @@ document.getElementById("select-operation").onchange = function() {
     }
 }   
 </script>
-
-
-
+</div>
 <!-- Display minimize and maximize buttons for code content window -->
 <div id="code-content" hidden>
-<!-- <button class='btn btn-sm btn-outline-dark pull-right float-right mt-4 bg-dark text-light border-white' 
+<button class='btn btn-sm btn-outline-dark pull-right float-right mt-4 bg-dark text-light border-white' 
         onclick="textareaFullScreen()" id='btn-fullscreen'>
-        ->
-</button> -->
+        []
+</button>
 <button class='btn btn-sm btn-outline-dark pull-right float-right mt-4 bg-dark text-light border-white' 
         onclick="textareaMaxHandler()" id='btn-max'>
         +
@@ -204,5 +203,4 @@ document.getElementById("select-operation").onchange = function() {
 <div style="height:50px; width:100%; clear:both;"></div>
 </div>
 <label id="bottom"></label>
-
 {% endblock top_panel %}
