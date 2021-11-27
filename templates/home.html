@@ -4,7 +4,7 @@
 {% load static %}
 
 {% block top_panel %}
-
+<label id="top"></label>
 <!-- Search form  -->
 <form class="form mt-2" name="form-search-code"
         method="get"
@@ -173,10 +173,10 @@ document.getElementById("select-operation").onchange = function() {
 
 <!-- Display minimize and maximize buttons for code content window -->
 <div id="code-content" hidden>
-<button class='btn btn-sm btn-outline-dark pull-right float-right mt-4 bg-dark text-light border-white' 
+<!-- <button class='btn btn-sm btn-outline-dark pull-right float-right mt-4 bg-dark text-light border-white' 
         onclick="textareaFullScreen()" id='btn-fullscreen'>
         ->
-</button>
+</button> -->
 <button class='btn btn-sm btn-outline-dark pull-right float-right mt-4 bg-dark text-light border-white' 
         onclick="textareaMaxHandler()" id='btn-max'>
         +
@@ -185,12 +185,24 @@ document.getElementById("select-operation").onchange = function() {
         onclick="textareaMinHandler()" id='btn-min'>
         -
 </button>
+<button id="page-down" class='btn btn-sm btn-outline-dark pull-right float-right mt-4 bg-dark text-light border-white' hidden>
+    <a href="#bottom">Page Down</a>
+</button>
 
-
+<!-- <a href="#bottom" style="margin: 50%;">bottom</a> -->
 <!-- Display a text window for the content of a selected code item  -->
 <textarea id="textarea-source" class="form-control mt-2 text-light bg-dark" 
             rows="10" style="margin-top: 15px; overflow: auto;"
             placeholder="code content window" wrap="off">
 </textarea>
+<button class='btn btn-sm btn-outline-dark float-right mt-4 bg-dark text-light border-white'>
+    <a href="#top">Page Up</a>
+</button>
+<!-- <a href="#top" style="margin: 45%;">
+    <span style="color: darkblue; font-size: x-large;">- top -</span>
+</a> -->
+<div style="height:50px; width:100%; clear:both;"></div>
 </div>
+<label id="bottom"></label>
+
 {% endblock top_panel %}
