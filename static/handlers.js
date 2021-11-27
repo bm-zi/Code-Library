@@ -268,8 +268,11 @@ function oneRowHandler(){
 
 
 function textareaMaxHandler(){
+        var page_up = document.getElementById("page-up");
         var page_down = document.getElementById("page-down")
+        page_up.hidden = false;    
         page_down.hidden = false;
+
         var el = document.getElementById("textarea-source");
         var count = el.value.split("\n").length;
         $('#textarea-source').attr('rows', count);
@@ -278,7 +281,9 @@ function textareaMaxHandler(){
 
 function textareaMinHandler(){
     var page_down = document.getElementById("page-down")
+    var page_up = document.getElementById("page-up");
     page_down.hidden = true;
+    page_up.hidden = true; 
     var el = document.getElementById("textarea-source");
     var count = el.value.split("\n").length;
     $('#textarea-source').attr('rows', 6);
