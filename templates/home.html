@@ -5,202 +5,210 @@
 
 {% block top_panel %}
 <label id="top"></label>
-<div id="full-screen">
-<!-- Search form  -->
-<form class="form mt-2" name="form-search-code"
-        method="get"
-        action="{% url 'codelibrary:search_codes_view' %}">
 
-    <div class="row">
-        <div class="col">
-            <input name="q" class="form-control" type="search" 
-                    placeholder="Search in codes content or title..."
-                    aria-label="Search" id="search-str" />
-            
-            <input name="days" class="form-control" type="search" 
-                    placeholder="Find codes from n-day ago ..."
-                    aria-label="Search" id="days-str"/>
-            
-            <select name="select-language" class="custom-dropdown-menu mr-2 pt-2" 
-                    id="select-language" style="width:100%;max-width:100%;">
-                <option value="">Programming Language or Framework</option>
-                {% for l in languages %}
-                    <option value="{{l}}">{{l}}</option>
-                {% endfor %}
-            </select>
+<div id="full-screen">
+    <div class="mb-3">
+    <!-- Search form  -->
+    <form class="form mt-2" name="form-search-code"
+            method="get"
+            action="{% url 'codelibrary:search_codes_view' %}">
+
+        <div class="row">
+            <div class="col">
+                <input name="q" class="form-control" type="search" 
+                        placeholder="Search in codes content or title..."
+                        aria-label="Search" id="search-str" />
+                
+                <input name="days" class="form-control" type="search" 
+                        placeholder="Find codes from n-day ago ..."
+                        aria-label="Search" id="days-str"/>
+                
+                <select name="select-language" class="custom-dropdown-menu mr-2 pt-2" 
+                        id="select-language" style="width:100%;max-width:100%;">
+                    <option value="">Programming Language or Framework</option>
+                    {% for l in languages %}
+                        <option value="{{l}}">{{l}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col">
+                <select class="select" id="" name="select-category" 
+                        style="width:100%;max-width:100%;" multiple>
+                    {% for c in categories %}
+                        <option value="{{c}}">{{c}}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
-        <div class="col">
-            <select class="select" id="" name="select-category" 
-                    style="width:100%;max-width:100%;" multiple>
-                {% for c in categories %}
-                    <option value="{{c}}">{{c}}</option>
-                {% endfor %}
-            </select>
+
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-4">
+                <button class="btn btn-sm btn-outline-dark btn-lg btn-block mt-1 p-2 font-weight-bold" style="background: powderblue;">
+                    search
+                </button>
+            </div>
+            <div class="col-4">
+                <!-- Display number of search result -->
+                <label class="p-1 mt-1">
+                    <span id="options-number" class="h4 text-warning">
+                        {{countopts}}
+                    </span>
+                </label>
+            </div>
         </div>
+    </form>
+</div>
+
+
+    <!-- minimize/maximize buttons (labeled as "-" and "+") and Action dropdown menu -->
+    <div style="background: rgba(255, 255, 255, 0.445); border: none; overflow: hidden;">
+
+        <button class='btn btn-sm btn-outline-dark pull-right float-right border-white bg-dark text-light' 
+                onclick="selectMinHandler()">
+                +
+        </button>
+        <button class='btn btn-sm btn-outline-dark pull-right float-right border-white bg-dark text-light' 
+                onclick="oneRowHandler()">
+                -
+        </button>
+
+        <!-- Drop-down action menu -->
+        <select id="select-operation"
+            class="custom-dropdown-menu form-inline pull-right float-right mr-2 font-weight-bold"
+            style="background: powderblue; width: 20%;">
+
+            <option selected>action menu</option>
+            <option value="show all codes">show all codes</option>
+            <option id="save-code" value="save">save</option>
+            <option id="fav-code" value="favorite/unfavorite change">favorite/unfavorite change</option>
+            <option id="modify-code" value="modify code">modify code</option>
+            <option value="add new code">add new code</option>
+            <option id="delete-code" value="delete code">delete code</option>
+            <option id="download-code" value="download content">download content</option>
+
+        </select>{% csrf_token %}
+
     </div>
 
-    <button class="btn btn-outline-dark btn-lg btn-block bg-secondary mt-1">
-        search
-    </button>
-</form>
+    <!-- Display a list of selectable code titles -->
+    <select id="select-title" class="bg-light" style="width: 100%;" 
+            size="{{favorites_no}}" onchange="codeDisplayHandler()">
+        
+        {% for t in titles %}
+            <option value="{{t}}">{{t}}</option>
+        {% endfor %}
+
+    </select>{% csrf_token %}<br>
 
 
-<!-- Display number of search result -->
-<label>
-    <span id="options-number">
-        {{countopts}}
-    </span>
-</label>
+    <!-- Display information details on selected code -->
+    <div id="textarea-codeinfo" hidden>
+        <table id="info-table"
+            class="table table-sm table-dark table-bordered"
+            >
+            <tbody>
+            <tr>
+                <td></td><td></td>
+            </tr>
+            <tr>
+                <td></td><td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+    // script to associate action items to respective handlers 
+
+    document.getElementById("select-operation").onfocus = function() {
+        var titles =  document.getElementById('select-title');
+        if ( !titles.options[titles.selectedIndex] ) {
+                document.getElementById("save-code").disabled = true;
+                document.getElementById("modify-code").disabled = true;
+                document.getElementById("delete-code").disabled = true;
+                document.getElementById("download-code").disabled = true;
+                document.getElementById("fav-code").disabled = true;
+        }
+        else {
+                document.getElementById("save-code").disabled = false;
+                document.getElementById("modify-code").disabled = false;
+                document.getElementById("delete-code").disabled = false;
+                document.getElementById("download-code").disabled = false;
+                document.getElementById("fav-code").disabled = false;
+        }
+    }
 
 
-<!-- minimize and maximize buttons (labeled as "-" and "+") -->
-<div>
-    <!-- <button class='btn btn-sm btn-outline-dark pull-right float-right mt-0 bg-light' 
-            onclick='selectMaxHandler("{{total_no}}")'>
-            ++
-    </button> -->
-    <button class='btn btn-sm btn-outline-dark pull-right float-right mt-0 bg-light' 
-            onclick="selectMinHandler()">
-            +
-    </button>
-    <button class='btn btn-sm btn-outline-dark pull-right float-right mt-0 bg-light' 
-            onclick="oneRowHandler()">
-            -
-    </button>
+    document.getElementById("select-operation").onchange = function() {
+
+        var select_operation = document.getElementById('select-operation');
+        var operation_str = select_operation.options[select_operation.selectedIndex].text;
+        
+        if (operation_str === 'show all codes') {
+            window.location.href = "{% url 'codelibrary:all_view' %}"
+        }
+
+        if (operation_str === 'save') {
+            saveSourceHandler()
+        }
+
+        if (operation_str === 'modify code') {
+            modifyHandler()
+        }
+
+        if (operation_str === 'favorite/unfavorite change') {
+            favoriteHandler()
+        }
+
+        if (operation_str === 'delete code') {
+            deleteHandler()
+        }
+
+        if (operation_str === 'add new code') {
+            window.location.href = "{% url 'codelibrary:add_new_code_view' %}"
+        }
+        if (operation_str === 'download content') {
+            downloadCodeHandler()
+        }
+    }   
+    </script>
+
 </div>
 
-
-<!-- Display a list of selectable code titles -->
-<select id="select-title" class="bg-light" style="width: 100%;" 
-        size="{{favorites_no}}" onchange="codeDisplayHandler()">
-    
-    {% for t in titles %}
-        <option value="{{t}}">{{t}}</option>
-    {% endfor %}
-
-</select>{% csrf_token %}<br>
-
-
-<!-- Display information details on selected code -->
-<div id="textarea-codeinfo" class="mb-2" hidden>
-    <table id="info-table" 
-        class="table table-sm table-dark table-bordered"
-        style="border: 3px solid"
-        >
-        <tbody>
-          <tr>
-            <td></td><td></td>
-          </tr>
-          <tr>
-            <td></td><td></td>
-          </tr>
-        </tbody>
-      </table>
-</div>
-
-
-<!-- Drop-down action menu -->
-<select id="select-operation" class="custom-dropdown-menu bg-secondary p-2" 
-        style="width:100%;max-width:100%;">
-
-    <option selected>select an action</option>
-    <option value="show all codes">show all codes</option>
-    <option id="save-code" value="save">save</option>
-    <option id="fav-code" value="favorite/unfavorite change">favorite/unfavorite change</option>
-    <option id="modify-code" value="modify code">modify code</option>
-    <option value="add new code">add new code</option>
-    <option id="delete-code" value="delete code">delete code</option>
-    <option id="download-code" value="download content">download content</option>
-
-</select>{% csrf_token %}
-
-<!-- associate action items to respective handlers -->
-<script type="text/javascript">
-
-document.getElementById("select-operation").onfocus = function() {
-    var titles =  document.getElementById('select-title');
-    if ( !titles.options[titles.selectedIndex] ) {
-            document.getElementById("save-code").disabled = true;
-            document.getElementById("modify-code").disabled = true;
-            document.getElementById("delete-code").disabled = true;
-            document.getElementById("download-code").disabled = true;
-            document.getElementById("fav-code").disabled = true;
-    }
-    else {
-            document.getElementById("save-code").disabled = false;
-            document.getElementById("modify-code").disabled = false;
-            document.getElementById("delete-code").disabled = false;
-            document.getElementById("download-code").disabled = false;
-            document.getElementById("fav-code").disabled = false;
-    }
-}
-
-
-document.getElementById("select-operation").onchange = function() {
-
-    var select_operation = document.getElementById('select-operation');
-    var operation_str = select_operation.options[select_operation.selectedIndex].text;
-    
-    if (operation_str === 'show all codes') {
-         window.location.href = "{% url 'codelibrary:all_view' %}"
-    }
-
-    if (operation_str === 'save') {
-        saveSourceHandler()
-    }
-
-    if (operation_str === 'modify code') {
-        modifyHandler()
-    }
-
-    if (operation_str === 'favorite/unfavorite change') {
-        favoriteHandler()
-    }
-
-    if (operation_str === 'delete code') {
-        deleteHandler()
-    }
-
-    if (operation_str === 'add new code') {
-        window.location.href = "{% url 'codelibrary:add_new_code_view' %}"
-    }
-    if (operation_str === 'download content') {
-        downloadCodeHandler()
-    }
-}   
-</script>
-</div>
 <!-- Display minimize and maximize buttons for code content window -->
 <div id="code-content" hidden>
-<button class='btn btn-sm btn-outline-dark pull-right float-right mt-4 bg-dark text-light border-white' 
-        onclick="textareaFullScreen()" id='btn-fullscreen'>
-        []
-</button>
-<button class='btn btn-sm btn-outline-dark pull-right float-right mt-4 bg-dark text-light border-white' 
-        onclick="textareaMaxHandler()" id='btn-max'>
-        +
-</button>
-<button class='btn btn-sm btn-outline-dark pull-right float-right mt-4 bg-dark text-light border-white' 
-        onclick="textareaMinHandler()" id='btn-min'>
-        -
-</button>
-<button id="page-down" class='btn btn-sm btn-outline-dark pull-right float-right mt-4 bg-dark text-light border-white' hidden>
-    <a href="#bottom">Page Down</a>
-</button>
+    <div class="mt-4" style="background: rgba(255, 255, 255, 0.445); border: none; overflow: hidden;">
+        <button class='btn btn-sm btn-outline-dark pull-right float-right border-white bg-dark text-light' 
+                onclick="textareaFullScreen()" id='btn-fullscreen'>
+                []
+        </button>
+        <button class='btn btn-sm btn-outline-dark pull-right float-right border-white bg-dark text-light' 
+                onclick="textareaMaxHandler()" id='btn-max'>
+                +
+        </button>
+        <button class='btn btn-sm btn-outline-dark pull-right float-right border-white bg-dark text-light' 
+                onclick="textareaMinHandler()" id='btn-min'>
+                -
+        </button>
+        <button id="page-down" class='btn btn-sm btn-outline-dark pull-right float-right bg-dark border-white' hidden>
+            <a href="#bottom" class="text-light">Page Down</a>
+        </button>
+    </div>
 
-<!-- <a href="#bottom" style="margin: 50%;">bottom</a> -->
-<!-- Display a text window for the content of a selected code item  -->
-<textarea id="textarea-source" class="form-control mt-2 text-light bg-dark" 
-            rows="10" style="margin-top: 15px; overflow: auto;"
-            placeholder="code content window" wrap="off">
-</textarea>
-<button id="page-up" class='btn btn-sm btn-outline-dark float-right mt-4 bg-dark text-light border-white' hidden>
-    <a href="#top">Page Up</a>
-</button>
-<!-- <a href="#top" style="margin: 45%;">
-    <span style="color: darkblue; font-size: x-large;">- top -</span>
-</a> -->
-<div style="height:50px; width:100%; clear:both;"></div>
+    <textarea id="textarea-source" class="form-control mt-0 text-light bg-dark"
+                rows="10" style="margin-top: 15px; overflow: auto;"
+                placeholder="code content window" wrap="off">
+    </textarea>
+    <button id="page-up" class='btn btn-sm btn-outline-dark float-right mt-4 bg-dark border-white' hidden>
+        <a href="#top" class="text-light">Page Up</a>
+    </button>
+
+    <!-- Empty space at page buttom -->
+    <div style="height:50px; width:100%; clear:both;">
+    </div>
+
 </div>
+
 <label id="bottom"></label>
 {% endblock top_panel %}
