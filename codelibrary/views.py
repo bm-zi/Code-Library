@@ -1,15 +1,13 @@
-from django.http import request
-from django.http import response
-from django.shortcuts import render
-from django.http.response import JsonResponse, HttpResponseRedirect, Http404
-from django.shortcuts import render, HttpResponse, redirect
+# from http.client import HTTPResponse
+# from django.http import request, response
+from django.http.response import JsonResponse
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q, fields
-import json
-from datetime import datetime, timedelta
 from django.utils import timezone
-from django.urls import reverse
 from .models import Category, CodeLibrary, Language, Source
+from datetime import timedelta
+import json
 
 
 
@@ -21,14 +19,18 @@ def queries():
 
     This dictionary of data will be used in other view functions.
     """
-
     qs1 = Category.objects.all()
+    # type(qs1) : <class 'django.db.models.query.QuerySet'>
+    # type(qs1[0]) : <class 'codelibrary.models.Category'>
+    # type(qs1[0].serialize()) <class 'dict'>
     categories_items = [x.serialize() for x in qs1]
     categories = [c['category'] for c in categories_items]
+    categories = sorted(categories, key=str.casefold)
 
     qs2 = Language.objects.all()
     language_items = [x.serialize() for x in qs2]
     languages = [l['language'] for l in language_items]
+    languages = sorted(languages, key=str.casefold)
 
     all_codes = CodeLibrary.objects.all()
     total_no= len(all_codes)
@@ -60,21 +62,18 @@ def home_view(request):
     # titles in favorite
     titles = CodeLibrary.objects.filter(is_favorite=True)
     favorites_no =  queries().get('favorites_no')
-
     languages = queries().get('languages')
-
-    categories = queries().get('categories')
+    categories = queries().get('categories') 
     total_no = queries().get('total_no')
 
-
     return render(request, 'home.html', context={
-        "categories": categories,
-        'titles': titles,
-        'languages': languages,
-        'favorites_no': favorites_no,
-        'total_no': total_no,
-        'alltitles' : '- Listing Favorite Codes'
-    })
+            "categories": categories,
+            "titles": titles,
+            "languages": languages,
+            "favorites_no": favorites_no,
+            "total_no": total_no,
+            "alltitles" : "- Listing Favorite Codes"}
+        )
 
 
 
@@ -89,12 +88,13 @@ def all_view(request):
 
 
 
-
 @csrf_exempt
 def title_source_view(request):
     """
         url : "/title-source"
-        handles the request for selected code item
+        post request: { "select_title": <title-name> }
+
+        Handles the request for selected code item.
 
         JSON response is populated in codes title list and 
         code information text area by get_content_of_code_item.js 
@@ -143,7 +143,7 @@ def title_source_view(request):
     
         return JsonResponse(data, status=200)
 
-    data = { 'warning: ' :'no title display'}
+    data = { 'warning: ' :'requested code item is not available'}
     return JsonResponse(data, status=200)
 
 
@@ -158,12 +158,15 @@ def add_new_code_view(request):
     """
 
     if request.method == 'POST' and request.POST['title']:
+        print(request.POST)
         t = request.POST['title']
         l = request.POST['language']
         c = request.POST.getlist('category')
         s = request.POST['source']
         f = request.POST.get('is_favorite', False)
+        n = request.POST.get('continue', False)
 
+        
         cl = CodeLibrary()
 
         #### title
@@ -189,6 +192,12 @@ def add_new_code_view(request):
             category_obj = Category.objects.filter(category=elem).first()
             obj_id = category_obj.id
             cl.category.add(obj_id)
+
+        if n != 'on':
+            data = queries()
+            data["alltitles"] = '- Listing All Codes'
+            return render(request, 'home.html', context=data)
+
 
     qs1 = Category.objects.all()
     categories_items = [x.serialize() for x in qs1]
@@ -354,7 +363,7 @@ def search_codes_view(request):
     data = queries()
     
     if request.method == 'GET':
-        
+        qst = None
         # Check if the form 'form-search-code' is sending values 
         # from fields to this view function
 
@@ -473,7 +482,8 @@ def search_codes_view(request):
                 not request.GET['select-language'] and 
                 not request.GET.getlist('select-category')
                 ):
-            qst = CodeLibrary.objects.all()
+            # qst = CodeLibrary.objects.all()
+            qst =  ''
 
         # 11
         if ( request.GET['q'] and
@@ -500,15 +510,14 @@ def search_codes_view(request):
 
 
         result = []
-        if qst.exists():
+        if qst == None:
+            result = ['No result found',]
+            countopts = 0
+        else:
             for elem in qst:
                 result.append(elem.title)
             countopts = len(result)
 
-        else:
-            error_msg = 'No result found'
-            result = [error_msg,]
-            countopts = 0
 
         data['titles'] = result
         data['countopts'] = 'found: ' + str(countopts)

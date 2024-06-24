@@ -42,6 +42,11 @@
     setSelectedIndex(document.getElementById('language'),"python");
   </script>
 
+  <div class="form-check">
+    <input name="is_favorite" type="checkbox" class="form-check-input" id="exampleCheck1">
+    <label class="form-check-label" for="exampleCheck1" style="text-indent: 10px">is favorite</label>
+  </div>
+  <br>
 
   <div class="form-group">
     <label for="exampleFormControlSelect2">Code category - multiple select</label>
@@ -51,17 +56,15 @@
       {% endfor %}
     </select>
   </div>
-
   <br>
 
   <div class="form-check">
-    <input name="is_favorite" type="checkbox" class="form-check-input" id="exampleCheck1">
-    <label class="form-check-label" for="exampleCheck1" style="text-indent: 10px">is favorite</label>
+    <input name="continue" type="checkbox" class="form-check-input" id="exampleCheck1">
+    <label class="form-check-label" for="exampleCheck1" style="text-indent: 10px">save and create new one</label>
+    
+    
+    <input type="submit" value="Save" class='btn btn-lg btn-outline-dark pull-right float-right border-white bg-dark text-light'>
   </div>
-  <br>
-
-
-  <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Submit</button>
 </form>
 
 
